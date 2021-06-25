@@ -110,13 +110,4 @@ async def get_google_screen(message: types.message, state: FSMContext):
 # блок скринов Goolge
 
 
-async def on_startup(dp):
-    await bot.set_webhook(
-        'https://ru-1.gateway.serverless.selcloud.ru/api/v1/web/c1226cf9427d40469f04dd599f03c8ca/default/test_func')
-
-if __name__ == '__main__':
-    start_webhook(dispatcher=dp, webhook_path='/api/v1/web/c1226cf9427d40469f04dd599f03c8ca/default/test_func',
-                  on_startup=on_startup,
-                  skip_updates=True)
-
-# executor.start_polling(dp)
+executor.start_polling(dp)
