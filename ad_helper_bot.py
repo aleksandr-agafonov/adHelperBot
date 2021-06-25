@@ -4,12 +4,13 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from states import Actions
 from aiogram.dispatcher import FSMContext
+from aiogram.utils.executor import start_webhook
 
 
 token = '1615105002:AAGPdbHvBXLiHCG4hxlB87YQIMt4DFCTQOA'
-
 bot = Bot(token=token)
 dp = Dispatcher(bot, storage=MemoryStorage())
+
 
 # создаем клавиатуру
 show_yandex_add_button = InlineKeyboardButton('Конкуренты в Яндексе', callback_data='c_show_yandex_add')
@@ -108,4 +109,14 @@ async def get_google_screen(message: types.message, state: FSMContext):
         await message.answer('Привет! Чего изволите?', reply_markup=keyboard)
 # блок скринов Goolge
 
-executor.start_polling(dp)
+
+async def on_startup(dp):
+    await bot.set_webhook(
+        'https://ru-1.gateway.serverless.selcloud.ru/api/v1/web/c1226cf9427d40469f04dd599f03c8ca/default/test_func')
+
+if __name__ == '__main__':
+    start_webhook(dispatcher=dp, webhook_path='/api/v1/web/c1226cf9427d40469f04dd599f03c8ca/default/test_func',
+                  on_startup=on_startup,
+                  skip_updates=True)
+
+# executor.start_polling(dp)
