@@ -4,7 +4,6 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from states import Actions
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.executor import start_webhook
 
 
 token = '1615105002:AAGPdbHvBXLiHCG4hxlB87YQIMt4DFCTQOA'
