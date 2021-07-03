@@ -21,7 +21,8 @@ screen_google_add_button = InlineKeyboardButton('Скрин выдачи в Goog
 
 keyboard = InlineKeyboardMarkup(resize_keyboard=True)
 keyboard.add(show_yandex_add_button)
-keyboard.add(screen_yandex_add_button, screen_google_add_button)
+keyboard.add(screen_yandex_add_button)
+keyboard.add(screen_google_add_button)
 
 
 # Приветственный блок
@@ -83,7 +84,6 @@ async def get_yandex_screen(message: types.message, state: FSMContext):
     if message.text != '/start':
         search_query = message.text.replace(' ', '+')
         yandex_ad_url = 'https://www.yandex.ru/search/ads?text=' + search_query + '&lr=1'
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0'}
 
         url = ' https://api.topvisor.com/v2/json/get/webScreens_2'
         api_key = '43012ad5e875832a46fe'
@@ -128,8 +128,7 @@ async def get_google_add_screenshot(callback_query: types.CallbackQuery):
 async def get_google_screen(message: types.message, state: FSMContext):
     if message.text != '/start':
         search_query = message.text.replace(' ', '+')
-        yandex_ad_url = 'https://www.google.ru/search?q=' + search_query
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0'}
+        google_ad_url = 'https://www.google.ru/search?q=' + search_query
 
         url = ' https://api.topvisor.com/v2/json/get/webScreens_2'
         api_key = '43012ad5e875832a46fe'
@@ -141,7 +140,7 @@ async def get_google_screen(message: types.message, state: FSMContext):
         }
 
         params = {
-            'url': yandex_ad_url,
+            'url': google_ad_url,
             'w': 1000,
             'h': 2350,
         }
