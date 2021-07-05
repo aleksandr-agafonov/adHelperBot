@@ -51,7 +51,7 @@ def parse_auto_ru(mark, model):
         region = i['seller']['location']['region_info']['name']
 
         try:
-            discount = i['discount_options']['max_discount']
+            discount = re.sub('(\d)(?=(\d{3})+(?!\d))', r'\1,', '%d' % i['discount_options']['max_discount'])
         except KeyError:
             discount = 'Нет'
 
