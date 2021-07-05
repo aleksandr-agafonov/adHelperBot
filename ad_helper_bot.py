@@ -193,20 +193,17 @@ async def get_model_and_parse_auto_ru(message: types.message, state: FSMContext)
     model = message.text
 
     if len(parse_auto_ru(mark, model)) != 0:
-        try:
-            for i in parse_auto_ru(mark, model):
-                await message.answer(
-                    i['mark'] + ' ' +
-                    i['model'] + '\n' +
-                    'Цена: ' + i['price'] + '\n' +
-                    'Год выпуска: ' + i['year'] + '\n' +
-                    'Комплектация: ' + i['complectation'] + '\n' +
-                    'Дилер: ' + i['dealer'] + '\n' +
-                    'Регион: ' + i['region'] + '\n' +
-                    'Максимальная выгода: ' + i['discount']
-                )
-        except:
-            await message.answer(parse_auto_ru(mark, model))
+        for i in parse_auto_ru(mark, model):
+            await message.answer(
+                i['mark'] + ' ' +
+                i['model'] + '\n' +
+                'Цена: ' + i['price'] + '\n' +
+                'Год выпуска: ' + i['year'] + '\n' +
+                'Комплектация: ' + i['complectation'] + '\n' +
+                'Дилер: ' + i['dealer'] + '\n' +
+                'Регион: ' + i['region'] + '\n' +
+                'Максимальная выгода: ' + i['discount']
+            )
 
         await state.finish()
         await message.answer('Чего изволите?', reply_markup=keyboard)

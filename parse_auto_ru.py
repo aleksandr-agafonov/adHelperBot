@@ -35,8 +35,11 @@ def parse_auto_ru(mark, model):
         'x-requested-with': 'fetch'
     }
 
-    req = requests.post(url, json=params, headers=headers)  # Делаем post запрос на url
-    data = req.json()['offers']  # Переменная data хранит полученные объявления
+    try:
+        req = requests.post(url, json=params, headers=headers)  # Делаем post запрос на url
+        data = req.json()['offers']  # Переменная data хранит полученные объявления
+    except:
+        return req.json()
 
     car_list = []
 
