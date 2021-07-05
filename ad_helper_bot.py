@@ -7,7 +7,6 @@ from states import Actions
 import requests
 from bs4 import BeautifulSoup
 import json
-from parse_auto_ru import parse_auto_ru
 
 
 token = '1615105002:AAGPdbHvBXLiHCG4hxlB87YQIMt4DFCTQOA'
