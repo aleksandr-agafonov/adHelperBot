@@ -7,6 +7,7 @@ from states import Actions
 import requests
 from bs4 import BeautifulSoup
 import json
+from parse_auto_ru import parse_auto_ru
 
 
 token = '1615105002:AAGPdbHvBXLiHCG4hxlB87YQIMt4DFCTQOA'
@@ -18,11 +19,13 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 show_yandex_add_button = InlineKeyboardButton('Конкуренты в Яндексе', callback_data='c_show_yandex_add')
 screen_yandex_add_button = InlineKeyboardButton('Скрин выдачи в Яндексе', callback_data='c_screen_yandex_add')
 screen_google_add_button = InlineKeyboardButton('Скрин выдачи в Google', callback_data='c_screen_google_add')
+parse_auto_ru_button = InlineKeyboardButton('Спарсить Auto.ru', callback_data='c_parse_auto_ru')
 
 keyboard = InlineKeyboardMarkup(resize_keyboard=True)
 keyboard.add(show_yandex_add_button)
 keyboard.add(screen_yandex_add_button)
 keyboard.add(screen_google_add_button)
+keyboard.add(parse_auto_ru_button)
 
 
 # Приветственный блок
@@ -166,6 +169,49 @@ async def get_google_screen(message: types.message, state: FSMContext):
 async def get_my_ip(callback_query: types.CallbackQuery):
     req = requests.get('https://api.myip.com/')
     await bot.send_message(callback_query.from_user.id, req.json()['ip'])
+
+
+# Парсинг Авто.ру
+@dp.callback_query_handler(lambda c: c.data == 'c_parse_auto_ru')
+async def get_yandex_add_query(callback_query: types.CallbackQuery):
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_message(callback_query.from_user.id, 'Введите марку')
+    await Actions.parse_auto_ru_state_get_mark.set()
+
+
+@dp.message_handler(state=Actions.parse_auto_ru_state_get_mark)
+async def get_auto_ru_data(message: types.message, state: FSMContext):
+    await message.answer('Введите модель')
+    global mark
+    mark = message.text
+    await Actions.parse_auto_ru_state_get_model.set()
+
+
+@dp.message_handler(state=Actions.parse_auto_ru_state_get_model)
+async def get_model_and_parse_auto_ru(message: types.message, state: FSMContext):
+    global model
+    model = message.text
+
+    if len(parse_auto_ru(mark, model)) != 0:
+        for i in parse_auto_ru(mark, model):
+            await message.answer(
+                i['mark'] + ' ' +
+                i['model'] + '\n' +
+                'Цена: ' + i['price'] + '\n' +
+                'Год выпуска: ' + i['year'] + '\n' +
+                'Комплектация: ' + i['complectation'] + '\n' +
+                'Дилер: ' + i['dealer'] + '\n' +
+                'Регион: ' + i['region'] + '\n' +
+                'Максимальная выгода: ' + i['discount']
+            )
+
+        await state.finish()
+        await message.answer('Чего изволите?', reply_markup=keyboard)
+
+    else:
+        await message.answer('По вашему запросу ничего не найдено')
+        await state.finish()
+        await message.answer('Чего изволите?', reply_markup=keyboard)
 
 
 executor.start_polling(dp)
