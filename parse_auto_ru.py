@@ -39,7 +39,7 @@ def parse_auto_ru(mark, model):
         req = requests.post(url, json=params, headers=headers)  # Делаем post запрос на url
         data = req.json()['offers']  # Переменная data хранит полученные объявления
     except:
-        return req.json()
+        return req.status_code
 
     car_list = []
 
